@@ -22,9 +22,6 @@ public class HelloServiceImpl implements HelloService {
         else
             hello = new Hello(id, String.format(HELLO_TEMPLATE, "World"));
 
-        //TODO: раскомментировать, чтобы проверить @AfterThrowing advice
-        //if (Math.random() <  0.5) throw new RuntimeException("Пример логгирования исключения");
-
         return hello;
     }
 }
