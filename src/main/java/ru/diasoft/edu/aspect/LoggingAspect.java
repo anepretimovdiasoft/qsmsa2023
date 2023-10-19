@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class LoggingAspect {
 
     @Around("execution (* ru.diasoft.edu.service.HelloServiceImpl.*(..))")
-    public void logBefore(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object logBefore(ProceedingJoinPoint joinPoint) throws Throwable {
         System.out.println("Логгирование перед вызовом метода : ");
         System.out.println(joinPoint.getSignature().getName());
         System.out.println("Аргументы метода : ");
@@ -24,6 +24,7 @@ public class LoggingAspect {
         System.out.println(joinPoint.getSignature().getName());
 
         System.out.println("Результат работы метода : " + result);
-    }
 
+        return result;
+    }
 }
