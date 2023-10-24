@@ -1,6 +1,7 @@
 package ru.diasoft.edu.service;
 
 import org.springframework.stereotype.Service;
+import ru.diasoft.edu.aspect.annotation.LogExample;
 import ru.diasoft.edu.domain.Hello;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,6 +13,7 @@ public class HelloServiceImpl implements HelloService {
     private final AtomicLong counter = new AtomicLong();
 
     @Override
+    @LogExample
     public Hello getHello(String name) {
 
         Hello hello;

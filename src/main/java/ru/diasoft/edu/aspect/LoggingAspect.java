@@ -11,7 +11,7 @@ import java.util.Arrays;
 @Component
 public class LoggingAspect {
 
-    @Around("execution (* ru.diasoft.edu.service.HelloServiceImpl.*(..))")
+    @Around("@annotation(ru.diasoft.edu.aspect.annotation.LogExample)")
     public Object logBefore(ProceedingJoinPoint joinPoint) throws Throwable {
         System.out.println("Логгирование перед вызовом метода : ");
         System.out.println(joinPoint.getSignature().getName());
