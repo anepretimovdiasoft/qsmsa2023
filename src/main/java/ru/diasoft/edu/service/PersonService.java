@@ -1,17 +1,17 @@
 package ru.diasoft.edu.service;
 
-import ru.diasoft.edu.dto.Person;
+import ru.diasoft.edu.dto.PersonDto;
 
 import java.util.List;
 
 public interface PersonService {
-    Person createPerson(Person person);
+    PersonDto createPerson(PersonDto personDto);
 
-    List<Person> getAllPerson();
+    List<PersonDto> getAllPerson();
 
-    Person getPersonById(long id);
+    PersonDto getPersonById(long id);
 
-    Person updatePerson(long id, Person person);
+    PersonDto updatePerson(long id, PersonDto personDto);
 
     void deletePerson(long id);
 }

@@ -1,55 +1,66 @@
 package ru.diasoft.edu.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.diasoft.edu.dto.Person;
-import ru.diasoft.edu.exception.NoSuchPersonException;
+import ru.diasoft.edu.domain.Person;
+import ru.diasoft.edu.dto.PersonDto;
+import ru.diasoft.edu.dto.converter.PersonConverter;
+import ru.diasoft.edu.exception.PersonNotFoundException;
+import ru.diasoft.edu.repository.PersonRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
-    private final AtomicLong counter;
-    private final List<Person> personList;
+    private final PersonRepository personRepository;
+    private final PersonConverter personConverter;
 
-    public PersonServiceImpl() {
-        this.personList = new ArrayList<>();
-        counter = new AtomicLong();
+    @Override
+    public PersonDto createPerson(PersonDto personDto) {
+
+        Person savePerson = personRepository.save(personConverter.toEntity(personDto));
+
+        return personConverter.toDto(savePerson);
     }
 
     @Override
-    public Person createPerson(Person person) {
-        person.setId(counter.incrementAndGet());
-        personList.add(person);
-        return person;
+    public List<PersonDto> getAllPerson() {
+
+        return personRepository.findAll().stream()
+                .map(personConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Person> getAllPerson() {
-        return personList;
+    public PersonDto getPersonById(long id) {
+
+        Optional<Person> optionalPerson = personRepository.findById(id);
+
+        if (!optionalPerson.isPresent()) throw new PersonNotFoundException("Person with ID " + id + " not found");
+
+        return personConverter.toDto(optionalPerson.get());
     }
 
     @Override
-    public Person getPersonById(long id) {
-        return personList.stream()
-                .filter(p -> p.getId() == id).findFirst()
-                .orElseThrow(() -> new NoSuchPersonException("Person not found!"));
-    }
+    public PersonDto updatePerson(long id, PersonDto personDto) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person with ID " + id + " not found"));
 
-    @Override
-    public Person updatePerson(long id, Person person) {
-        personList.removeIf(p -> p.getId() == id);
+        person.setName(personDto.getName());
 
-        person.setId(id);
-
-        personList.add(person);
-        return person;
+        Person updatedPerson = personRepository.save(person);
+        return personConverter.toDto(updatedPerson);
     }
 
     @Override
     public void deletePerson(long id) {
-        personList.removeIf(p -> p.getId() == id);
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person with ID " + id + " not found"));
+
+        personRepository.delete(person);
     }
 }

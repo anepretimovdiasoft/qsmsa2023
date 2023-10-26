@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class Person {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PersonDto {
     private long id;
     private String name;
 }
