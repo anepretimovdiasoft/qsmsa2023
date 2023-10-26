@@ -12,44 +12,44 @@ import java.util.concurrent.atomic.AtomicLong;
 public class PersonServiceImpl implements PersonService {
 
     private final AtomicLong counter;
-    private final List<Person> personSet;
+    private final List<Person> personList;
 
     public PersonServiceImpl() {
-        this.personSet = new ArrayList<>();
+        this.personList = new ArrayList<>();
         counter = new AtomicLong();
     }
 
     @Override
     public Person createPerson(Person person) {
         person.setId(counter.incrementAndGet());
-        personSet.add(person);
+        personList.add(person);
         return person;
     }
 
     @Override
     public List<Person> getAllPerson() {
-        return personSet;
+        return personList;
     }
 
     @Override
     public Person getPersonById(long id) {
-        return personSet.stream()
+        return personList.stream()
                 .filter(p -> p.getId() == id).findFirst()
                 .orElseThrow(() -> new NoSuchPersonException("Person not found!"));
     }
 
     @Override
     public Person updatePerson(long id, Person person) {
-        personSet.removeIf(p -> p.getId() == id);
+        personList.removeIf(p -> p.getId() == id);
 
         person.setId(id);
 
-        personSet.add(person);
+        personList.add(person);
         return person;
     }
 
     @Override
     public void deletePerson(long id) {
-        personSet.removeIf(p -> p.getId() == id);
+        personList.removeIf(p -> p.getId() == id);
     }
 }
