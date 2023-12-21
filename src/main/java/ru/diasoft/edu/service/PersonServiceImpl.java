@@ -17,21 +17,21 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
-    private final PersonConverter personConverter;
 
     @Override
     public PersonDto createPerson(PersonDto personDto) {
 
-        Person savePerson = personRepository.save(personConverter.toEntity(personDto));
+        Person entity = PersonConverter.toEntity(personDto);
+        Person savePerson = personRepository.save(entity);
 
-        return personConverter.toDto(savePerson);
+        return PersonConverter.toDto(savePerson);
     }
 
     @Override
     public List<PersonDto> getAllPerson() {
 
         return personRepository.findAll().stream()
-                .map(personConverter::toDto)
+                .map(PersonConverter::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class PersonServiceImpl implements PersonService {
 
         if (!optionalPerson.isPresent()) throw new PersonNotFoundException("Person with ID " + id + " not found");
 
-        return personConverter.toDto(optionalPerson.get());
+        return PersonConverter.toDto(optionalPerson.get());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PersonServiceImpl implements PersonService {
         person.setName(personDto.getName());
 
         Person updatedPerson = personRepository.save(person);
-        return personConverter.toDto(updatedPerson);
+        return PersonConverter.toDto(updatedPerson);
     }
 
     @Override
