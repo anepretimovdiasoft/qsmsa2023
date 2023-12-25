@@ -20,6 +20,7 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
 
     @Override
+    @Transactional
     public PersonDto createPerson(PersonDto personDto) {
 
         Person entity = PersonConverter.toEntity(personDto);
@@ -29,6 +30,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PersonDto> getAllPerson() {
 
         return personRepository.findAll().stream()
@@ -37,6 +39,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PersonDto getPersonById(long id) {
 
         Optional<Person> optionalPerson = personRepository.findById(id);
@@ -47,6 +50,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PersonDto> getPersonByName(String name) {
 
         return personRepository.findByName(name).stream()
@@ -55,6 +59,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PersonDto> getPersonByNameLike(String nameLike) {
 
         return personRepository.findByNameLike(nameLike).stream()
@@ -63,6 +68,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional
     public PersonDto updatePerson(long id, PersonDto personDto) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException("Person with ID " + id + " not found"));
@@ -85,6 +91,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional
     public void deletePerson(long id) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException("Person with ID " + id + " not found"));
