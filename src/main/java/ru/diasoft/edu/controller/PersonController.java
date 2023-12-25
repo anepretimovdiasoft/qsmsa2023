@@ -33,6 +33,24 @@ public class PersonController {
         return personService.getPersonById(id);
     }
 
+    @GetMapping("/person/name/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PersonDto> getPersonByName(@PathVariable String name) {
+        return personService.getPersonByName(name);
+    }
+
+    @GetMapping("/person/name/like/{nameLike}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PersonDto> getPersonByNameLike(@PathVariable String nameLike) {
+        return personService.getPersonByNameLike(nameLike);
+    }
+
+    @PutMapping("/person")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePerson(@RequestParam("id") long id, @RequestParam("name") String name) {
+        personService.updatePersonNameById(id, name);
+    }
+
     @PutMapping("/person/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PersonDto updatePerson(@RequestBody PersonDto personDto, @PathVariable long id) {

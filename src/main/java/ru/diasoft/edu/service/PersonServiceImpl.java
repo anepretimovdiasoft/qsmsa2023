@@ -2,6 +2,7 @@ package ru.diasoft.edu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.diasoft.edu.domain.Person;
 import ru.diasoft.edu.dto.PersonDto;
 import ru.diasoft.edu.dto.converter.PersonConverter;
@@ -46,14 +47,41 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public List<PersonDto> getPersonByName(String name) {
+
+        return personRepository.findByName(name).stream()
+                .map(PersonConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PersonDto> getPersonByNameLike(String nameLike) {
+
+        return personRepository.findByNameLike(nameLike).stream()
+                .map(PersonConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public PersonDto updatePerson(long id, PersonDto personDto) {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException("Person with ID " + id + " not found"));
 
-        person.setName(personDto.getName());
+        Person entity = PersonConverter.toEntity(personDto);
+        person.setName(entity.getName());
+        person.setEmails(entity.getEmails());
 
         Person updatedPerson = personRepository.save(person);
         return PersonConverter.toDto(updatedPerson);
+    }
+
+    @Override
+    @Transactional
+    public void updatePersonNameById(long id, String name) {
+        personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person with ID " + id + " not found"));
+
+        personRepository.updateNameById(id, name);
     }
 
     @Override

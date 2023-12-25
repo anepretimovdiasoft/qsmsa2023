@@ -11,7 +11,13 @@ public interface PersonService {
 
     PersonDto getPersonById(long id);
 
+    List<PersonDto> getPersonByName(String name);
+
+    List<PersonDto> getPersonByNameLike(String nameLike);
+
     PersonDto updatePerson(long id, PersonDto personDto);
+
+    void updatePersonNameById(long id, String name);
 
     void deletePerson(long id);
 }
