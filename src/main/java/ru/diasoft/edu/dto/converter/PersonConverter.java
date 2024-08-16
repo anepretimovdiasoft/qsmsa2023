@@ -18,11 +18,19 @@ public class PersonConverter {
     // will be made static
     public PersonDto toDto(Person person) {
 
-        return PersonDto.builder()
+        PersonDto personDto = PersonDto.builder()
                 .id(person.getId())
                 .name(person.getName())
-                .emails(person.getEmails().stream().map(EmailConverter::toDto).collect(Collectors.toSet()))
                 .build();
+
+        if (person.getEmails() != null) {
+            personDto.setEmails(
+                    person.getEmails().stream()
+                            .map(EmailConverter::toDto)
+                            .collect(Collectors.toSet())
+            );
+        }
+        return personDto;
     }
 
     // will be made static
@@ -31,10 +39,11 @@ public class PersonConverter {
         Person person = new Person();
         person.setId(personDto.getId());
         person.setName(personDto.getName());
-        person.setEmails(personDto.getEmails().stream()
-                .map(email -> EmailConverter.toEntity(email, person))
-                .collect(Collectors.toSet()));
-
+        if (personDto.getEmails() != null) {
+            person.setEmails(personDto.getEmails().stream()
+                    .map(email -> EmailConverter.toEntity(email, person))
+                    .collect(Collectors.toSet()));
+        }
         return person;
     }
 }
